@@ -126,13 +126,13 @@ namespace WGF
 
 		if (m_originMoving && m_turning)
 		{
-			MoveOrigin(glm::vec2(x, y) * p_turnSensitivity);
+			MoveOrigin(glm::vec2(-x, y) * p_turnSensitivity);
 			e.handled = true;
 			return;
 		}
 
 		if (m_turning) {
-			Turn(- x * p_turnSensitivity, y * p_turnSensitivity);
+			Turn(-x * p_turnSensitivity, y * p_turnSensitivity);
 			e.handled = true;
 			return;
 		}

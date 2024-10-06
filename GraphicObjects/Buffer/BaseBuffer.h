@@ -20,6 +20,7 @@ namespace WGF
 			m_bufferDesc.label = "GPU buffer";
 			m_bufferDesc.usage = usage;
 			m_bufferDesc.mappedAtCreation = false;
+			if ((usage | size) == 0) return;
 			Allocate(size);
 		}
 
@@ -77,6 +78,7 @@ namespace WGF
 			this->m_bufferDesc = other.m_bufferDesc;
 			this->m_buffer = other.m_buffer;
 			other.m_buffer = nullptr;
+			return *this;
 		}
 
 		WGPUBuffer GetBufferHandle() const { return m_buffer; }

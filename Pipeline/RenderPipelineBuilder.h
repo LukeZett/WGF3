@@ -4,9 +4,9 @@
 #include "Framework.h"
 #include "Buffer/BufferLayout.h"
 
-void setDefault(WGPUBindGroupLayoutEntry& bindingLayout);
-void setDefault(WGPUStencilFaceState& stencilFaceState);
-void setDefault(WGPUDepthStencilState& depthStencilState);
+inline void setDefault(WGPUBindGroupLayoutEntry& bindingLayout);
+inline void setDefault(WGPUStencilFaceState& stencilFaceState);
+inline void setDefault(WGPUDepthStencilState& depthStencilState);
 
 namespace WGF
 {
@@ -86,6 +86,8 @@ namespace WGF
 		{
 			return m_bindGroupLayouts.emplace_back();
 		}
+
+		inline RenderPipelineBuilder& SetCulling(WGPUCullMode mode, WGPUFrontFace winding);
 
 		inline RenderPipelineBuilder& SetDepthState(bool depthWrite, WGPUTextureFormat depthTexFormat,
 			WGPUCompareFunction compFun = WGPUCompareFunction_Less)
@@ -209,7 +211,14 @@ inline WGF::BufferLayout& WGF::RenderPipelineBuilder::AddBufferLayout(uint16_t l
 	return m_bufferLayouts.back();
 }
 
-void setDefault(WGPUBindGroupLayoutEntry& bindingLayout) {
+inline WGF::RenderPipelineBuilder& WGF::RenderPipelineBuilder::SetCulling(WGPUCullMode mode, WGPUFrontFace winding)
+{
+	m_pipelineDesc.primitive.frontFace = winding;
+	m_pipelineDesc.primitive.cullMode = mode;
+	return *this;
+}
+
+inline void setDefault(WGPUBindGroupLayoutEntry& bindingLayout) {
 	bindingLayout.buffer.nextInChain = nullptr;
 	bindingLayout.buffer.type = WGPUBufferBindingType_Undefined;
 	bindingLayout.buffer.hasDynamicOffset = false;
@@ -228,14 +237,14 @@ void setDefault(WGPUBindGroupLayoutEntry& bindingLayout) {
 	bindingLayout.texture.viewDimension = WGPUTextureViewDimension_Undefined;
 }
 
-void setDefault(WGPUStencilFaceState& stencilFaceState) {
+inline void setDefault(WGPUStencilFaceState& stencilFaceState) {
 	stencilFaceState.compare = WGPUCompareFunction_Always;
 	stencilFaceState.failOp = WGPUStencilOperation_Keep;
 	stencilFaceState.depthFailOp = WGPUStencilOperation_Keep;
 	stencilFaceState.passOp = WGPUStencilOperation_Keep;
 }
 
-void setDefault(WGPUDepthStencilState& depthStencilState) {
+inline void setDefault(WGPUDepthStencilState& depthStencilState) {
 	depthStencilState.format = WGPUTextureFormat_Undefined;
 	depthStencilState.depthWriteEnabled = false;
 	depthStencilState.depthCompare = WGPUCompareFunction_Always;

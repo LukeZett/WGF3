@@ -3,8 +3,8 @@
 #include "Device.h"
 #include "Logging.h"
 #include "glm/glm.hpp"
-#include "Texture.h"
-#include "TextureView.h"
+#include "RAIITexture.h"
+#include "RAIITextureView.h"
 
 namespace WGF
 {
@@ -17,8 +17,8 @@ namespace WGF
 */
 	class BaseTexture
 	{
-		Texture m_texture;
-		TextureView m_view;
+		RAIITexture m_texture;
+		RAIITextureView m_view;
 	protected:
 		WGPUTextureDescriptor m_desc = {};
 		WGPUTextureViewDescriptor m_viewDesc = {};
@@ -82,6 +82,11 @@ namespace WGF
 			i_SetDefaultViewDescriptor<WGPUTextureViewDimension_3D>();
 		}
 
+		template<>
+		void SetDefaultViewDescriptor<20>() {
+			i_SetDefaultViewDescriptor<WGPUTextureViewDimension_2DArray>();
+		}
+
 		
 
 	private:
@@ -106,6 +111,7 @@ namespace WGF
 
 	void BaseTexture::i_Init(uint32_t width, uint32_t height, uint32_t depth) {
 		m_desc.size = { width, height, depth };
+		m_desc.size.depthOrArrayLayers = depth;
 		m_view.Destroy();
 		m_texture.Init(m_desc);
 	}
@@ -135,7 +141,13 @@ namespace WGF
 		source.bytesPerRow = static_cast<uint32_t>(pixelSize) * size.x;
 		source.rowsPerImage = size.y;
 
-		wgpuQueueWriteTexture(Device::GetQueue(), &destination, bytes, size.x * size.y * size.z * pixelSize, &source, &m_desc.size);
+		WGPUExtent3D writeSize;
+		writeSize.width = size.x;
+		writeSize.height = size.y;
+		writeSize.depthOrArrayLayers = size.z;
+
+
+		wgpuQueueWriteTexture(Device::GetQueue(), &destination, bytes, size.x * size.y * size.z * pixelSize, &source, &writeSize);
 	}
 
 	template<WGPUTextureDimension dim>

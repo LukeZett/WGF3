@@ -87,12 +87,17 @@ namespace WGF
 
 		WGPUTextureView GetNextSurfaceTextureView();
 
+		inline GLFWwindow* GetGLFWwin() { return m_window; }
+
 		inline WGPUSurface GetSurface() const { return m_surface; }
 
 		inline const WGPUTextureFormat& GetTextureFormat() const { return m_surfaceConfig.format; }
 		
 		inline int Width() const { return m_surfaceConfig.width; }
+
 		inline int Height() const { return m_surfaceConfig.height; }
+
+		inline bool Minimized() const { return Width() == 0 || Height() == 0; }
 
 		inline void PresentSurface() const { wgpuSurfacePresent(m_surface); }
 

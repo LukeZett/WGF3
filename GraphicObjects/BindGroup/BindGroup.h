@@ -11,7 +11,7 @@ namespace WGF
 		std::vector<WGPUBindGroupEntry> m_bindings;
 		WGPUBindGroup m_bindGroup = nullptr;
 	public:
-		BindGroup(const WGPUBindGroupLayout& bgLayout);
+		inline BindGroup(const WGPUBindGroupLayout& bgLayout);
 
 		void AddUniformBinding(uint32_t  binding, WGPUBuffer buffer, uint32_t offset, uint32_t bindingSize);
 
@@ -21,13 +21,13 @@ namespace WGF
 
 		inline WGPUBindGroup Get() { return m_bindGroup; }
 
-		~BindGroup();
+		inline ~BindGroup();
 
 	private:
 
 	};
 
-	BindGroup::BindGroup(const WGPUBindGroupLayout& bgLayout)
+	inline BindGroup::BindGroup(const WGPUBindGroupLayout& bgLayout)
 	{
 		m_bindGroupDesc.nextInChain = nullptr;
 		m_bindGroupDesc.layout = bgLayout;
@@ -61,7 +61,7 @@ namespace WGF
 		return m_bindGroup;
 	}
 
-	BindGroup::~BindGroup()
+	inline BindGroup::~BindGroup()
 	{
 		if (m_bindGroup != nullptr) wgpuBindGroupRelease(m_bindGroup);
 	}

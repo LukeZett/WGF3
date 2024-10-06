@@ -5,12 +5,12 @@
 namespace WGF
 {
 
-	class TextureView
+	class RAIITextureView
 	{
 		WGPUTextureView m_texView = nullptr;
 
 	public:
-		TextureView() {}
+		RAIITextureView() {}
 
 		void Init(WGPUTexture& tex, WGPUTextureViewDescriptor& desc)
 		{
@@ -27,19 +27,24 @@ namespace WGF
 
 		WGPUTextureView& Get() { return m_texView; }
 
-		TextureView(const TextureView&) = delete;
+		RAIITextureView(const RAIITextureView&) = delete;
 
-		TextureView(TextureView&& other) noexcept
+		RAIITextureView(RAIITextureView&& other) noexcept
 		{
 			m_texView = other.m_texView;
 			other.m_texView = nullptr;
 		}
 
-		TextureView& operator=(TextureView&& other) noexcept
+		RAIITextureView& operator=(RAIITextureView&& other) noexcept
 		{
 			m_texView = other.m_texView;
 			other.m_texView = nullptr;
 			return *this;
+		}
+
+		~RAIITextureView()
+		{
+			Destroy();
 		}
 	};
 }

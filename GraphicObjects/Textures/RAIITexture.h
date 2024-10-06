@@ -5,12 +5,12 @@
 namespace WGF
 {
 
-	class Texture
+	class RAIITexture
 	{
 		WGPUTexture m_texture = nullptr;
 
 	public:
-		Texture() {}
+		RAIITexture() {}
 
 		void Init(WGPUTextureDescriptor& desc)
 		{
@@ -28,19 +28,24 @@ namespace WGF
 
 		WGPUTexture& Get() { return m_texture; }
 
-		Texture(const Texture&) = delete;
+		RAIITexture(const RAIITexture&) = delete;
 
-		Texture(Texture&& other) noexcept
+		RAIITexture(RAIITexture&& other) noexcept
 		{
 			m_texture = other.m_texture;
 			other.m_texture = nullptr;
 		}
 
-		Texture& operator=(Texture&& other) noexcept
+		RAIITexture& operator=(RAIITexture&& other) noexcept
 		{
 			m_texture = other.m_texture;
 			other.m_texture = nullptr;
 			return *this;
+		}
+
+		~RAIITexture()
+		{
+			Destroy();
 		}
 	};
 }

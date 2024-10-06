@@ -58,6 +58,13 @@ namespace WGF
 		}
 
 		template<>
+		inline BufferLayout& AddElement<unsigned int>(int count)
+		{
+			i_AddElement<WGPUVertexFormat_Uint32, unsigned int>(count);
+			return *this;
+		}
+
+		template<>
 		inline BufferLayout& AddElement<float>(int count)
 		{
 			i_AddElement<WGPUVertexFormat_Float32, float>(count);

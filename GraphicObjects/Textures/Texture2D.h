@@ -4,6 +4,7 @@
 
 namespace WGF
 {
+
 	class Texture2D : public BaseTexture
 	{
 	public:

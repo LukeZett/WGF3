@@ -6,6 +6,7 @@
 #include "Device.h"
 #include "AppWindow.h"
 #include "memory"
+#include "RenderPassFactory.h"
 
 namespace WGF
 {

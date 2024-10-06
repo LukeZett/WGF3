@@ -19,6 +19,13 @@ namespace WGF
 		{
 		}
 
+		inline const float GetFarPlane() const { return m_zFar; }
+
+		inline const glm::vec3& GetPosition() const
+		{
+			return m_position;
+		}
+
 		glm::mat4 getViewMat() const {
 			return glm::lookAt(m_position, m_focusPoint, m_upVector);
 		}

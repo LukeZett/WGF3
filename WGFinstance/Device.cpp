@@ -34,7 +34,7 @@ bool Device::Init(WGPUAdapter adapter, [[maybe_unused]] const DeviceLimits& devi
 
     if (s_instance.m_device)
     {
-        wgpuDeviceSetUncapturedErrorCallback(s_instance.m_device, onDeviceError, nullptr);
+        //wgpuDeviceSetUncapturedErrorCallback(s_instance.m_device, onDeviceError, nullptr);
         s_instance.m_deviceQueue = wgpuDeviceGetQueue(s_instance.m_device);
         wgpuQueueOnSubmittedWorkDone(s_instance.m_deviceQueue, onQueueWorkDone, nullptr);
         return true;
@@ -93,12 +93,18 @@ void Device::SetInterShaderStageLimits(uint32_t maxInterStageShaderComponents, u
     s_instance.m_limits.limits.maxInterStageShaderVariables = maxInterStageShaderVariables;
 }
 
-void Device::SetBindGroupsLimits(uint16_t maxBindGroups, uint16_t maxUniformBuffersPerShader, uint64_t maxUniformSize)
+void Device::SetBindGroupsLimits(uint16_t maxBindGroups, uint16_t maxUniformBuffersPerShader, uint64_t maxUniformSize, uint32_t maxGroupBindings)
 {
     s_instance.m_limits.limits.maxBindGroups = maxBindGroups;
     s_instance.m_limits.limits.maxUniformBufferBindingSize = maxUniformSize; // 16 * float / 4 * vec4f / 1 matrix4f
     s_instance.m_limits.limits.maxUniformBuffersPerShaderStage = maxUniformBuffersPerShader;
-    s_instance.m_limits.limits.maxBindingsPerBindGroup = 2;
+    s_instance.m_limits.limits.maxBindingsPerBindGroup = maxGroupBindings;
+}
+
+void Device::SetSamplersLimits(uint32_t maxSamplers, uint32_t maxSampledTextures)
+{
+    s_instance.m_limits.limits.maxSamplersPerShaderStage = maxSamplers;
+    s_instance.m_limits.limits.maxSampledTexturesPerShaderStage = maxSampledTextures;
 }
 
 void Device::SetTextureLimits(uint16_t height, uint16_t width, uint16_t depth, uint16_t maxTextures, uint16_t textureArrayLayers)

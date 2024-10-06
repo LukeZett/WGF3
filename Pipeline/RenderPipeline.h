@@ -93,6 +93,8 @@ namespace WGF
 			m_passColorAttachment = other.m_passColorAttachment;
 			m_passDesc = other.m_passDesc;
 			m_passDesc.colorAttachments = &m_passColorAttachment;
+			std::swap(m_bindGroupLayouts, other.m_bindGroupLayouts);
+			std::swap(m_layout, other.m_layout);
 			other.m_pipeline = nullptr;
 		}
 

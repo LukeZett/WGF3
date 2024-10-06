@@ -28,9 +28,9 @@ class Device
 
         static void SetVertexRequiredLimits(uint16_t maxVertexAttribs, uint16_t maxVertexBuffers, uint64_t maxBufferSize, uint16_t maxStride);
         static void SetInterShaderStageLimits(uint32_t maxInterStageShaderComponents, uint32_t maxInterStageShaderVariables);
-        static void SetBindGroupsLimits(uint16_t maxBindGroups, uint16_t maxUniformBuffersPerShader, uint64_t maxUniformSize);
+        static void SetBindGroupsLimits(uint16_t maxBindGroups, uint16_t maxUniformBuffersPerShader, uint64_t maxUniformSize, uint32_t maxGroupBindings);
         static void SetTextureLimits(uint16_t height, uint16_t width, uint16_t depth, uint16_t maxTextures, uint16_t textureArrayLayers);
-
+        static void SetSamplersLimits(uint32_t maxSamplers, uint32_t maxSampledTextures);
 
 
         ~Device() {};

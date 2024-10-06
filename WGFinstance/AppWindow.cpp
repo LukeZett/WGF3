@@ -36,9 +36,9 @@ bool AppWindow::Init(const WindowParameters& options)
 	return true;
 }
 
-void WGF::AppWindow::ConfigureSurface(WGPUAdapter adapter)
+void WGF::AppWindow::ConfigureSurface([[maybe_unused]] WGPUAdapter adapter)
 {
-	m_surfaceConfig.format = wgpuSurfaceGetPreferredFormat(m_surface, adapter);
+	m_surfaceConfig.format = WGPUTextureFormat_RGBA8Unorm;// wgpuSurfaceGetPreferredFormat(m_surface, adapter);
 	m_surfaceConfig.viewFormatCount = 0;
 	m_surfaceConfig.viewFormats = nullptr;
 	m_surfaceConfig.device = Device::Get();
@@ -119,6 +119,15 @@ void WGF::AppWindow::OnResize(int width, int height)
 {
 	m_surfaceConfig.height = height;
 	m_surfaceConfig.width = width;
+
+	if (m_resizeHandler != nullptr)
+	{
+		ResizeEvent e(width, height);
+		m_resizeHandler(e);
+	}
+
+	if (Minimized()) return;
+
 	wgpuSurfaceUnconfigure(m_surface);
 	wgpuSurfaceConfigure(m_surface, &m_surfaceConfig);
 
@@ -128,11 +137,7 @@ void WGF::AppWindow::OnResize(int width, int height)
 		m_depthTexture.CreateView();
 	}
 
-	if (m_resizeHandler != nullptr)
-	{
-		ResizeEvent e(width, height);
-		m_resizeHandler(e);
-	}
+	
 }
 
 void AppWindow::OnKey(int key, int scancode, int action, int mods)
