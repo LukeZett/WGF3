@@ -61,16 +61,18 @@ namespace WGF
 		WGPUColorTargetState m_colorTarget{};
 		WGPUDepthStencilState m_depthStencil{};
 		std::filesystem::path m_shaderSource = "";
-		
+
 		std::vector<BufferLayout> m_bufferLayouts;
 		std::vector<uint16_t> m_bufferLayoutOffsets;
-		
+
 		WGPUPipelineLayoutDescriptor m_layoutDesc = {};
 		WGPUPipelineLayout m_layout = nullptr;
 		std::vector<BindGroupLayout> m_bindGroupLayouts = {};
 
 	public:
 		inline RenderPipelineBuilder();
+
+		inline WGPURenderPipelineDescriptor& GetDescriptor() { return m_pipelineDesc; }
 
 		inline RenderPipeline Build();
 		
