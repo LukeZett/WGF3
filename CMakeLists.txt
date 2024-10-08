@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16)
 project(
     WGF3
     VERSION 0.0.1 # any version number
@@ -43,11 +43,12 @@ target_include_directories(WGF3 PUBLIC RenderPass)
 target_include_directories(WGF3 PUBLIC vendor/headerOnly)
 
 add_subdirectory(vendor/glfw3webgpu)
-add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
-target_link_libraries(WGF3 PUBLIC glfw3webgpu)
-target_link_libraries(WGF3 PUBLIC glfw)
-target_link_libraries(WGF3 PUBLIC glm)
+
+if (NOT EMSCRIPTEN)
+    # Do not include this with emscripten, it provides its own version.
+    add_subdirectory(vendor/glfw)
+endif()
 
 
 
@@ -83,9 +84,11 @@ endif()
 
 FetchContent_MakeAvailable(webgpu)
 target_link_libraries(WGF3 PRIVATE webgpu)
-target_copy_webgpu_binaries(WGF3)
 
 if (EMSCRIPTEN)
+    add_library(glfw INTERFACE)
+    target_link_options(glfw INTERFACE -sUSE_GLFW=3)
+
     target_link_options(WGF3 PRIVATE
         -sUSE_GLFW=3 # Use Emscripten-provided GLFW
         -sUSE_WEBGPU # Handle WebGPU symbols
@@ -94,4 +97,5 @@ if (EMSCRIPTEN)
     set_target_properties(WGF3 PROPERTIES SUFFIX ".html")
 endif()
 
+target_link_libraries(WGF3 PUBLIC glfw glfw3webgpu glm)
 target_copy_webgpu_binaries(WGF3)
