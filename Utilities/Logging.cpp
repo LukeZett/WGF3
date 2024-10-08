@@ -5,8 +5,13 @@ namespace WGF {
 	void Logging::PrintCurrentTime()
 	{
 		auto now = GetCurrentTime();
+
+#ifndef __EMSCRIPTEN__
 		char str[26];
 		ctime_s(str, sizeof str, &now);
+#else
+		char* str = "Unsupported on web";
+#endif // !__EMSCRIPTEN__
 		printf("%s", str);
 	}
 

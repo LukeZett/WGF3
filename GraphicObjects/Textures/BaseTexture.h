@@ -31,6 +31,8 @@ namespace WGF
 
 		WGPUTextureDescriptor& GetDescriptor() { return m_desc; }
 
+		void SetFormat(WGPUTextureFormat format) { m_desc.format = format, m_viewDesc.format = format; }
+
 		WGPUTextureViewDescriptor& GetViewDesc() { return m_viewDesc; }
 
 		inline void Delete();
@@ -145,7 +147,6 @@ namespace WGF
 		writeSize.width = size.x;
 		writeSize.height = size.y;
 		writeSize.depthOrArrayLayers = size.z;
-
 
 		wgpuQueueWriteTexture(Device::GetQueue(), &destination, bytes, size.x * size.y * size.z * pixelSize, &source, &writeSize);
 	}

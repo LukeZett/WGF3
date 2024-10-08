@@ -4,7 +4,6 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 #include "webgpu/webgpu.h"
-#include "webgpu/wgpu.h"
 #include "glfw3webgpu.h"
 #include "Events.h"
 #include <functional>

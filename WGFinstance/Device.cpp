@@ -17,7 +17,13 @@ bool Device::Init(WGPUAdapter adapter, [[maybe_unused]] const DeviceLimits& devi
 {
     WGPUSupportedLimits supportedLimits{};
     supportedLimits.nextInChain = nullptr;
+#ifdef __EMSCRIPTEN__
+    // Error in Chrome so we hardcode values:
+    supportedLimits.limits.minStorageBufferOffsetAlignment = 256;
+    supportedLimits.limits.minUniformBufferOffsetAlignment = 256;
+#else
     wgpuAdapterGetLimits(adapter, &supportedLimits);
+#endif
     s_instance.m_limits.limits.minStorageBufferOffsetAlignment = supportedLimits.limits.minStorageBufferOffsetAlignment;
     s_instance.m_limits.limits.minUniformBufferOffsetAlignment = supportedLimits.limits.minUniformBufferOffsetAlignment;
 
