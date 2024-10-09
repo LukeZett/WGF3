@@ -11,6 +11,10 @@ namespace WGF
 	*/
 	class BaseBuffer
 	{
+#ifdef WEBGPU_BACKEND_DAWN
+		using WGPUBufferUsageFlags = WGPUBufferUsage;
+#endif // WEBGPU_BACKEND_DAWN
+
 		WGPUBuffer m_buffer = nullptr;
 		WGPUBufferDescriptor m_bufferDesc = {};
 	public:

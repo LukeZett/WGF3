@@ -7,10 +7,15 @@ namespace WGF
 	template<typename T>
 	class Buffer
 	{
+#ifdef WEBGPU_BACKEND_DAWN
+		using WGPUBufferUsageFlags = WGPUBufferUsage;
+#endif // WEBGPU_BACKEND_DAWN
+
 	protected:
 		BaseBuffer m_buffer;
 		uint64_t m_size = 0;
 	public:
+		
 		Buffer(WGPUBufferUsageFlags usage, uint64_t capacity) : m_buffer(usage, capacity * sizeof(T)) {}
 
 		uint64_t Capacity() const { return m_buffer.Size() / sizeof(T); }

@@ -31,6 +31,8 @@ namespace WGF
 
 		WGPUTextureDescriptor& GetDescriptor() { return m_desc; }
 
+		const WGPUTextureDescriptor& GetDescriptor() const { return m_desc; }
+
 		void SetFormat(WGPUTextureFormat format) { m_desc.format = format, m_viewDesc.format = format; }
 
 		WGPUTextureViewDescriptor& GetViewDesc() { return m_viewDesc; }

@@ -31,7 +31,9 @@ bool Device::Init(WGPUAdapter adapter, [[maybe_unused]] const DeviceLimits& devi
 
 	deviceDesc.nextInChain = nullptr;
 	deviceDesc.label = "Device"; // anything works here, that's your call
-	//deviceDesc.requiredFeaturesCount = 0; // we do not require any specific feature
+    WGPUFeatureName feature = WGPUFeatureName_Float32Filterable;
+    deviceDesc.requiredFeatureCount = 1; // we do not require any specific feature
+    deviceDesc.requiredFeatures = &feature;
 	deviceDesc.requiredLimits = &s_instance.m_limits; // we do not require any specific limit
 	deviceDesc.defaultQueue.nextInChain = nullptr;
 	deviceDesc.defaultQueue.label = "Default queue";
