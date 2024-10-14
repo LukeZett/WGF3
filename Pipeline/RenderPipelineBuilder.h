@@ -3,7 +3,6 @@
 #include "RenderPipeline.h"
 #include "Framework.h"
 #include "Buffer/BufferLayout.h"
-#include "Differences.h"
 
 inline void setDefault(WGPUBindGroupLayoutEntry& bindingLayout);
 inline void setDefault(WGPUStencilFaceState& stencilFaceState);
@@ -102,7 +101,7 @@ namespace WGF
 			m_depthStencil.nextInChain = nullptr;
 			setDefault(m_depthStencil);
 			m_depthStencil.depthCompare = compFun;
-			m_depthStencil.depthWriteEnabled = (WGPUOptionalBool)depthWrite;
+			m_depthStencil.depthWriteEnabled = depthWrite;
 			m_depthStencil.format = depthTexFormat;
 
 			m_depthStencil.stencilReadMask = 0;
@@ -253,7 +252,7 @@ inline void setDefault(WGPUStencilFaceState& stencilFaceState) {
 
 inline void setDefault(WGPUDepthStencilState& depthStencilState) {
 	depthStencilState.format = WGPUTextureFormat_Undefined;
-	depthStencilState.depthWriteEnabled = (WGPUOptionalBool)false;
+	depthStencilState.depthWriteEnabled = false;
 	depthStencilState.depthCompare = WGPUCompareFunction_Always;
 	depthStencilState.stencilReadMask = 0xFFFFFFFF;
 	depthStencilState.stencilWriteMask = 0xFFFFFFFF;

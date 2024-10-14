@@ -18,6 +18,8 @@ namespace WGF
 		WGPUBuffer m_buffer = nullptr;
 		WGPUBufferDescriptor m_bufferDesc = {};
 	public:
+		BaseBuffer() = default;
+
 		BaseBuffer(WGPUBufferUsageFlags usage, uint64_t size)
 		{
 			m_bufferDesc.nextInChain = nullptr;

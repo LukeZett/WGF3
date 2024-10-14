@@ -15,6 +15,7 @@ namespace WGF
 		BaseBuffer m_buffer;
 		uint64_t m_size = 0;
 	public:
+		Buffer() = default;
 		
 		Buffer(WGPUBufferUsageFlags usage, uint64_t capacity) : m_buffer(usage, capacity * sizeof(T)) {}
 
