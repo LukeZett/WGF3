@@ -2,6 +2,10 @@
 #include "../Utilities/Logging.h"
 #include <cassert>
 
+#ifdef __EMSCRIPTEN__
+#  include <emscripten.h>
+#endif // __EMSCRIPTEN__
+
 auto onDeviceError = [](WGPUErrorType type, char const* message, void* /* pUserData */) {
     LOG_ERROR("Uncaptured device error type: " + std::to_string((int)type) + ", " + std::string(message));
 };
@@ -75,7 +79,11 @@ WGPUDevice Device::requestDevice(WGPUAdapter adapter, WGPUDeviceDescriptor const
         onDeviceRequestEnded,
         (void*)&userData
     );
-
+#ifdef __EMSCRIPTEN__
+    while (!userData.requestEnded) {
+        emscripten_sleep(100);
+    }
+#endif // __EMSCRIPTEN__
     return userData.device;
 }
 

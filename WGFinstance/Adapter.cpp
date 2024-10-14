@@ -1,6 +1,10 @@
 #include "Adapter.h"
 #include "../Utilities/Logging.h"
 
+#ifdef __EMSCRIPTEN__
+#  include <emscripten.h>
+#endif // __EMSCRIPTEN__
+
 using namespace WGF;
 
 bool Adapter::Init(WGPUInstance instance, WGPUSurface surface)
@@ -39,5 +43,11 @@ WGPUAdapter Adapter::requestAdapter(WGPUInstance instance, WGPURequestAdapterOpt
         onAdapterRequestEnded,
         (void*)&userData
     );
+#ifdef __EMSCRIPTEN__
+    while (!userData.requestEnded) {
+        emscripten_sleep(100);
+    }
+#endif // __EMSCRIPTEN__
+
     return userData.adapter;
 }
