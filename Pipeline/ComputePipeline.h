@@ -24,7 +24,17 @@ namespace WGF
 	};
 
 	WGF::ComputePipeline::ComputePipeline(WGPUComputePipelineDescriptor& desc, const std::filesystem::path& shaderPath)
-		: Pipeline(shaderPath) {}
+		: Pipeline(shaderPath)
+	{
+		desc.compute.module = m_shaderModule.Get();
+		desc.compute.entryPoint = "comp_main";
+		desc.compute.constantCount = 0;
+		desc.compute.constants = nullptr;
+		desc.nextInChain = nullptr;
+		desc.label = "compute";
+		desc.compute.nextInChain = nullptr;
+		m_pipeline = wgpuDeviceCreateComputePipeline(Device::Get(), &desc);
+	}
 
 	inline ComputePipeline::~ComputePipeline()
 	{
