@@ -25,6 +25,6 @@ namespace WGF
 
 	inline void Texture2D::Write(void* bytes, const glm::vec<2, uint32_t>& offset, const glm::vec<2, uint32_t>& size, size_t pixelSize, uint32_t miplevel)
 	{
-		i_Write(bytes, { offset, 1 }, { size, 1 }, pixelSize, miplevel);
+		i_Write(bytes, { offset, 0 }, { size, 1 }, pixelSize, miplevel);
 	}
 }

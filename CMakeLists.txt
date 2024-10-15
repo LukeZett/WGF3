@@ -50,7 +50,9 @@ add_library(WGF3
     "Utilities/Differences.h"
     "Pipeline/ComputePipeline.h"
     "Pipeline/PipelineBuilder.h"
- "Pipeline/ComputePipelineBuilder.h")
+    "Pipeline/ComputePipelineBuilder.h"
+    "GraphicObjects/Textures/Texture1D.h"
+    )
 
 set_target_properties(WGF3 PROPERTIES
     CXX_STANDARD 20
