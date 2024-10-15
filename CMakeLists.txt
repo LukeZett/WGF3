@@ -26,7 +26,7 @@ add_library(WGF3
     "GraphicObjects/Buffer/BufferLayout.h"
     "GraphicObjects/Shader/Shader.h"
     "GraphicObjects/Shader/Shader.cpp"
- "Pipeline/RenderPipeline.cpp" "Pipeline/RenderPipelineBuilder.h" "GraphicObjects/BindGroup/BindGroup.h" "Utilities/Object3D.cpp" "Utilities/Object3D.h" "Utilities/Cameras/Camera.h" "Utilities/Cameras/TurnTableCamera.h" "GraphicObjects/Textures/DepthTexture.h" "GraphicObjects/Textures/Texture2D.h" "GraphicObjects/Textures/RAIITexture.h" "GraphicObjects/Textures/Texture2D.cpp" "GraphicObjects/Textures/BaseTexture.h" "GraphicObjects/Textures/RAIITextureView.h" "Utilities/Cameras/FPVCamera.h" "GraphicObjects/Textures/Texture2DArray.h" "GraphicObjects/Textures/Image.h" "GraphicObjects/Textures/Image.cpp" "RenderPass/RenderPass.h" "RenderPass/RenderPass.cpp" "RenderPass/RenderPassFactory.h"  "GraphicObjects/Textures/Texture3D.h" "Utilities/Differences.h")
+ "Pipeline/RenderPipeline.cpp" "Pipeline/RenderPipelineBuilder.h" "GraphicObjects/BindGroup/BindGroup.h" "Utilities/Object3D.cpp" "Utilities/Object3D.h" "Utilities/Cameras/Camera.h" "Utilities/Cameras/TurnTableCamera.h" "GraphicObjects/Textures/DepthTexture.h" "GraphicObjects/Textures/Texture2D.h" "GraphicObjects/Textures/RAIITexture.h" "GraphicObjects/Textures/Texture2D.cpp" "GraphicObjects/Textures/BaseTexture.h" "GraphicObjects/Textures/RAIITextureView.h" "Utilities/Cameras/FPVCamera.h" "GraphicObjects/Textures/Texture2DArray.h" "GraphicObjects/Textures/Image.h" "GraphicObjects/Textures/Image.cpp" "RenderPass/RenderPass.h" "RenderPass/RenderPass.cpp" "RenderPass/RenderPassFactory.h"  "GraphicObjects/Textures/Texture3D.h" "Utilities/Differences.h" "Pipeline/ComputePipeline.h")
 
 set_target_properties(WGF3 PROPERTIES
     CXX_STANDARD 20
