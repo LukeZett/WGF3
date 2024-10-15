@@ -17,9 +17,6 @@ namespace WGF
 		WGPURenderPassColorAttachment m_passColorAttachment = {};
 		WGPURenderPassDepthStencilAttachment m_passDepthAttachment = {};
 		WGPURenderPipeline m_pipeline = nullptr;
-
-		WGPUPipelineLayout m_layout = nullptr;
-		std::vector<WGPUBindGroupLayout> m_bindGroupLayouts;
 	
 	private:
 		RenderPipeline(WGPURenderPipelineDescriptor& desc, WGPUFragmentState& fragState)
@@ -35,10 +32,7 @@ namespace WGF
 		void Init(WGPURenderPipelineDescriptor& pipelineDesc, WGPUFragmentState& fragState);
 
 	public:
-		inline const WGPUBindGroupLayout& GetBindGroupLayout(uint32_t index) const
-		{
-			return m_bindGroupLayouts[index];
-		}
+		
 
 		inline RenderPipeline& SetClearColor(WGPUColor color)
 		{
@@ -82,19 +76,16 @@ namespace WGF
 			Device::ReleaseEncoder();
 			wgpuQueueSubmit(Device::GetQueue(), 1, &command);
 			wgpuCommandBufferRelease(command);
-
 		}
 
 		RenderPipeline(const RenderPipeline&) = delete;
 
-		RenderPipeline(RenderPipeline&& other) noexcept
+		RenderPipeline(RenderPipeline&& other) noexcept : Pipeline(std::move(other))
 		{
 			m_pipeline = other.m_pipeline;
 			m_passColorAttachment = other.m_passColorAttachment;
 			m_passDesc = other.m_passDesc;
 			m_passDesc.colorAttachments = &m_passColorAttachment;
-			std::swap(m_bindGroupLayouts, other.m_bindGroupLayouts);
-			std::swap(m_layout, other.m_layout);
 			other.m_pipeline = nullptr;
 		}
 
@@ -103,15 +94,6 @@ namespace WGF
 			if (m_pipeline != nullptr)
 			{
 				wgpuRenderPipelineRelease(m_pipeline);
-			}
-
-			if (m_layout != nullptr)
-			{
-				wgpuPipelineLayoutRelease(m_layout);
-				for (auto& bgLayout : m_bindGroupLayouts)
-				{
-					wgpuBindGroupLayoutRelease(bgLayout);
-				}
 			}
 		};
 	};

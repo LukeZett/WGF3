@@ -3,6 +3,7 @@
 #include "RenderPipeline.h"
 #include "Framework.h"
 #include "Buffer/BufferLayout.h"
+#include "PipelineBuilder.h"
 
 inline void setDefault(WGPUBindGroupLayoutEntry& bindingLayout);
 inline void setDefault(WGPUStencilFaceState& stencilFaceState);
@@ -10,53 +11,8 @@ inline void setDefault(WGPUDepthStencilState& depthStencilState);
 
 namespace WGF
 {
-	class BindGroupLayout
-	{
-		friend class RenderPipelineBuilder;
 
-		WGPUBindGroupLayoutDescriptor m_desc = {};
-		std::vector<WGPUBindGroupLayoutEntry> m_entries;
-
-
-		WGPUBindGroupLayout Init()
-		{
-			m_desc.entryCount = m_entries.size();
-			m_desc.entries = &m_entries[0];
-			return wgpuDeviceCreateBindGroupLayout(Device::Get(), &m_desc);
-		}
-
-	public:
-
-#ifdef WEBGPU_BACKEND_DAWN
-		using WGPUShaderStageFlags = WGPUShaderStage;
-#endif // WEBGPU_BACKEND_DAWN
-
-		BindGroupLayout& AddUniformBinding(uint32_t binding, WGPUShaderStageFlags visibility, size_t uniformSize)
-		{
-			auto& entry = m_entries.emplace_back();
-			setDefault(entry);
-			entry.binding = binding;
-			entry.visibility = visibility;
-			entry.buffer.type = WGPUBufferBindingType_Uniform;
-			entry.buffer.minBindingSize = uniformSize;
-			return *this;
-		}
-
-		BindGroupLayout& AddTextureBinding(uint32_t binding, WGPUShaderStageFlags visibility, WGPUTextureViewDimension dimension, WGPUTextureSampleType sampleType)
-		{
-			auto& entry = m_entries.emplace_back();
-			setDefault(entry);
-			entry.binding = binding;
-			entry.visibility = visibility;
-			entry.texture.sampleType = sampleType;
-			entry.texture.viewDimension = dimension;
-			return *this;
-		}
-
-
-	};
-
-	class RenderPipelineBuilder
+	class RenderPipelineBuilder : public PipelineBuilder
 	{
 		WGPURenderPipeline m_pipeline = nullptr;
 		WGPURenderPipelineDescriptor m_pipelineDesc = {};
@@ -64,14 +20,9 @@ namespace WGF
 		WGPUBlendState m_blendState{};
 		WGPUColorTargetState m_colorTarget{};
 		WGPUDepthStencilState m_depthStencil{};
-		std::filesystem::path m_shaderSource = "";
 
 		std::vector<BufferLayout> m_bufferLayouts;
 		std::vector<uint16_t> m_bufferLayoutOffsets;
-
-		WGPUPipelineLayoutDescriptor m_layoutDesc = {};
-		WGPUPipelineLayout m_layout = nullptr;
-		std::vector<BindGroupLayout> m_bindGroupLayouts = {};
 
 	public:
 		inline RenderPipelineBuilder();
@@ -79,19 +30,14 @@ namespace WGF
 		inline WGPURenderPipelineDescriptor& GetDescriptor() { return m_pipelineDesc; }
 
 		inline RenderPipeline Build();
-		
+
 		inline RenderPipelineBuilder& SetShaderPath(const std::filesystem::path& source)
-		{ 
-			m_shaderSource = source;
+		{
+			PipelineBuilder::SetShaderPath(source);
 			return *this;
 		}
 
 		inline BufferLayout& AddBufferLayout(uint16_t locationOffset, bool instanced = false);
-
-		inline BindGroupLayout& AddBindGroup()
-		{
-			return m_bindGroupLayouts.emplace_back();
-		}
 
 		inline RenderPipelineBuilder& SetCulling(WGPUCullMode mode, WGPUFrontFace winding);
 
@@ -169,7 +115,6 @@ inline WGF::RenderPipeline WGF::RenderPipelineBuilder::Build()
 	m_pipelineDesc.vertex.bufferCount = m_bufferLayouts.size();
 	for (size_t i = 0; i < m_bufferLayouts.size(); i++)
 	{
-
 		m_bufferLayouts[i].GenerateVertexBufferLayout(layouts[i], layoutsAttribs[i], m_bufferLayoutOffsets[i]);
 	}
 
@@ -191,14 +136,15 @@ inline WGF::RenderPipeline WGF::RenderPipelineBuilder::Build()
 		m_pipelineDesc.layout = m_layout;
 	}
 
-
 	RenderPipeline pipeline = m_shaderSource == "" ? 
 		RenderPipeline(m_pipelineDesc, m_fragmentState) : RenderPipeline(m_shaderSource, m_pipelineDesc, m_fragmentState);
 
 	if (m_layout != nullptr)
 	{
-		pipeline.m_layout = m_layout;
+		pipeline.m_layout = std::move(m_layout);
 		pipeline.m_bindGroupLayouts = wgpuBGLayouts;
+		m_pipelineDesc.layout = pipeline.m_layout;
+		m_layout = nullptr;
 	}
 
 	for (auto& ptr : layoutsAttribs)
@@ -222,25 +168,6 @@ inline WGF::RenderPipelineBuilder& WGF::RenderPipelineBuilder::SetCulling(WGPUCu
 	m_pipelineDesc.primitive.frontFace = winding;
 	m_pipelineDesc.primitive.cullMode = mode;
 	return *this;
-}
-
-inline void setDefault(WGPUBindGroupLayoutEntry& bindingLayout) {
-	bindingLayout.buffer.nextInChain = nullptr;
-	bindingLayout.buffer.type = WGPUBufferBindingType_Undefined;
-	bindingLayout.buffer.hasDynamicOffset = false;
-
-	bindingLayout.sampler.nextInChain = nullptr;
-	bindingLayout.sampler.type = WGPUSamplerBindingType_Undefined;
-
-	bindingLayout.storageTexture.nextInChain = nullptr;
-	bindingLayout.storageTexture.access = WGPUStorageTextureAccess_Undefined;
-	bindingLayout.storageTexture.format = WGPUTextureFormat_Undefined;
-	bindingLayout.storageTexture.viewDimension = WGPUTextureViewDimension_Undefined;
-
-	bindingLayout.texture.nextInChain = nullptr;
-	bindingLayout.texture.multisampled = false;
-	bindingLayout.texture.sampleType = WGPUTextureSampleType_Undefined;
-	bindingLayout.texture.viewDimension = WGPUTextureViewDimension_Undefined;
 }
 
 inline void setDefault(WGPUStencilFaceState& stencilFaceState) {
