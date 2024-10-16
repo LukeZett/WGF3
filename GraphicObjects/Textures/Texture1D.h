@@ -28,5 +28,4 @@ namespace WGF
 	{
 		i_Write(bytes, glm::uvec3(offset, 0, 0), glm::uvec3(size, 1, 1), pixelSize, miplevel);
 	}
-	};
-}
+};
