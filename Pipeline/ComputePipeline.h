@@ -20,6 +20,8 @@ namespace WGF
 			other.m_pipeline = nullptr;
 		}
 
+		inline WGPUComputePipeline& Get() { return m_pipeline; }
+
 		inline ~ComputePipeline();
 	};
 

@@ -28,17 +28,19 @@ bool Device::Init(WGPUAdapter adapter, [[maybe_unused]] const DeviceLimits& devi
 #else
     wgpuAdapterGetLimits(adapter, &supportedLimits);
 #endif
-    s_instance.m_limits.limits.minStorageBufferOffsetAlignment = supportedLimits.limits.minStorageBufferOffsetAlignment;
-    s_instance.m_limits.limits.minUniformBufferOffsetAlignment = supportedLimits.limits.minUniformBufferOffsetAlignment;
+    auto limits = deviceLimits.m_limits;
+
+    limits.limits.minStorageBufferOffsetAlignment = supportedLimits.limits.minStorageBufferOffsetAlignment;
+    limits.limits.minUniformBufferOffsetAlignment = supportedLimits.limits.minUniformBufferOffsetAlignment;
 
 	WGPUDeviceDescriptor deviceDesc = {};
 
 	deviceDesc.nextInChain = nullptr;
-	deviceDesc.label = "Device"; // anything works here, that's your call
+	deviceDesc.label = "Device";
     WGPUFeatureName feature = WGPUFeatureName_Float32Filterable;
-    deviceDesc.requiredFeatureCount = 1; // we do not require any specific feature
+    deviceDesc.requiredFeatureCount = 1;
     deviceDesc.requiredFeatures = &feature;
-	deviceDesc.requiredLimits = &s_instance.m_limits; // we do not require any specific limit
+	deviceDesc.requiredLimits = &limits;
 	deviceDesc.defaultQueue.nextInChain = nullptr;
 	deviceDesc.defaultQueue.label = "Default queue";
 
@@ -115,6 +117,11 @@ void Device::SetBindGroupsLimits(uint16_t maxBindGroups, uint16_t maxUniformBuff
     s_instance.m_limits.limits.maxUniformBufferBindingSize = maxUniformSize; // 16 * float / 4 * vec4f / 1 matrix4f
     s_instance.m_limits.limits.maxUniformBuffersPerShaderStage = maxUniformBuffersPerShader;
     s_instance.m_limits.limits.maxBindingsPerBindGroup = maxGroupBindings;
+}
+
+void WGF::Device::SetStorageTextureLimits(uint16_t maxTextures)
+{
+    s_instance.m_limits.limits.maxStorageTexturesPerShaderStage = maxTextures;
 }
 
 void Device::SetSamplersLimits(uint32_t maxSamplers, uint32_t maxSampledTextures)

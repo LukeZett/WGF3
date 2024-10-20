@@ -56,6 +56,19 @@ namespace WGF
 			entry.texture.viewDimension = dimension;
 			return *this;
 		}
+
+		BindGroupLayout& AddTextureStorage(uint32_t binding, WGPUShaderStageFlags visibility,
+											WGPUStorageTextureAccess access, WGPUTextureFormat format, WGPUTextureViewDimension dimension)
+		{
+			auto& entry = m_entries.emplace_back();
+			setDefault(entry);
+			entry.binding = binding;
+			entry.visibility = visibility;
+			entry.storageTexture.access = access;
+			entry.storageTexture.format = format;
+			entry.storageTexture.viewDimension = dimension;
+			return *this;
+		}
 	};
 
 	class PipelineBuilder
