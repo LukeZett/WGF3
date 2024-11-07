@@ -51,7 +51,7 @@ namespace WGF
 
 		static bool ShouldClose()
 		{
-
+			return s_instance.m_appWindow->ShouldClose();
 		}
 
 	private:

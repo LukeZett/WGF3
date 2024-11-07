@@ -37,12 +37,14 @@ namespace WGF
 
 		WGPUTextureViewDescriptor& GetViewDesc() { return m_viewDesc; }
 
+		const WGPUTextureViewDescriptor& GetViewDesc() const { return m_viewDesc; }
+
 		inline void Delete();
 
 		inline WGPUTextureView CreateView();
 
 	protected:
-		inline void i_Write(void* bytes, const glm::vec<3, uint32_t>& offset, const glm::vec<3, uint32_t>& size, size_t pixelSize, uint32_t miplevel = 0);
+		inline void i_Write(const void* bytes, const glm::vec<3, uint32_t>& offset, const glm::vec<3, uint32_t>& size, size_t pixelSize, uint32_t miplevel = 0);
 
 		inline void i_Init(uint32_t width, uint32_t height, uint32_t depth);
 
@@ -131,7 +133,7 @@ namespace WGF
 		return m_view.Get();
 	}
 
-	inline void BaseTexture::i_Write(void* bytes, const glm::vec<3, uint32_t>& offset, const glm::vec<3, uint32_t>& size, size_t pixelSize, uint32_t miplevel)
+	inline void BaseTexture::i_Write(const void* bytes, const glm::vec<3, uint32_t>& offset, const glm::vec<3, uint32_t>& size, size_t pixelSize, uint32_t miplevel)
 	{
 		WGPUImageCopyTexture destination = {};
 		destination.texture = m_texture.Get();
